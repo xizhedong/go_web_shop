@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Go WebSocket 聊天</title>
+    <style>
+        #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .message { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div id="messages"></div>
+    <input type="text" id="input" placeholder="输入消息后按回车发送" style="width: 80%; padding: 8px;">
+
+    <script>
+        // 1. 连接 WebSocket 服务（协议是 ws，不是 http）
+        const ws = new WebSocket("ws://localhost:8080/chat");
+
+        // 2. 连接成功回调
+        ws.onopen = () => {
+            addMessage("✅ 已连接到聊天服务器");
+        };
+
+        // 3. 收到服务器消息时触发
+        ws.onmessage = (event) => {
+            addMessage(`📩 收到消息：${event.data}`);
+        };
+
+        // 4. 连接关闭时触发
+        ws.onclose = () => {
+            addMessage("❌ 与服务器断开连接");
+        };
+
+        // 5. 输入框按回车发送消息
+        document.getElementById("input").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const input = document.getElementById("input");
+                const msg = input.value.trim();
+                if (msg) {
+                    ws.send(msg); // 发送消息给服务器
+                    addMessage(`📤 发送消息：${msg}`);
+                    input.value = ""; // 清空输入框
+                }
+            }
+        });
+
+        // 辅助函数：添加消息到页面
+        function addMessage(text) {
+            const messagesDiv = document.getElementById("messages");
+            const div = document.createElement("div");
+            div.className = "message";
+            div.textContent = text;
+            messagesDiv.appendChild(div);
+            // 滚动到最新消息
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
