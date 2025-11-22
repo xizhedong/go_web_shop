@@ -10,10 +10,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var(
-	clients =make(map[*websocket.Conn]bool)
-	mu sync.Mutex
-	upgrader =websocket.Upgrader{
+var (
+	clients  = make(map[*websocket.Conn]bool)
+	mu       sync.Mutex
+	upgrader = websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
@@ -30,7 +30,7 @@ func broadcastMessage(message []byte) {
 			client.Close()
 			delete(clients, client)
 		}
-	}	
+	}
 }
 
 func handleChat(w http.ResponseWriter, r *http.Request) {
@@ -57,18 +57,19 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 		}
 		if messageType == websocket.TextMessage {
 			log.Printf("received message: %s", message)
-			broadcastMessage(message)
+			//从控制台输入然后发送消息
+			fmt.Printf("请输入要发送的消息：")
+			var input string
+			fmt.Scanln(&input)
+			broadcastMessage([]byte(input))
 		}
 	}
-}	
-
-
+}
 
 func main() {
 	http.HandleFunc("/ws", handleChat)
-	go handleChat()
 	log.Println("服务端启动：ws://localhost:8080/ws")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8081", nil); err != nil {
 		log.Fatalf("服务启动失败：%v", err)
 	}
 }

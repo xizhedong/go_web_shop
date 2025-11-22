@@ -1,0 +1,8 @@
+2025/11/22 16:29:54 ws router
+2025/11/22 16:29:54 Server starting on port 8080...
+2025/11/22 16:30:08 new client connected: [::1]:57838
+2025/11/22 16:30:10 received message: {"type":"message","content":"sa","user":"guanli","timestamp":"2025-11-22T08:30:10.931Z"}
+2025/11/22 16:32:34 error: websocket: close 1005 (no status)
+2025/11/22 16:32:34 new client connected: [::1]:37959
+2025/11/22 16:32:47 error: websocket: close 1005 (no status)
+2025/11/22 16:32:47 new client connected: [::1]:8272
