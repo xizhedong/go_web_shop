@@ -1,7 +1,8 @@
 package main
 
 import (
-	"go_web/template/router"
+	"go_web/api/router"
+	"go_web/configs"
 	"io"
 	"log"
 	"os"
@@ -14,6 +15,13 @@ import (
 )
 
 func main() {
+	// 加载配置
+	configs, err := configs.LoadConfig("configs/config-dev.yaml")
+	if err != nil {
+		log.Fatalf("❌ 加载配置失败: %v", err)
+	}
+	print(configs)
+
 	f, _ := os.Create("app.log")
 	log.SetOutput(io.MultiWriter(os.Stdout, f))
 
@@ -51,12 +59,13 @@ func main() {
 	}))
 
 	// 配置静态文件服务
-	r.Static("/static", "./frontend/build/static")
-	r.LoadHTMLGlob("frontend/build/*.html")
+	r.Static("/assets", "./frontend/dist/assets")
+	r.LoadHTMLGlob("frontend/dist/*.html")
 
 	router.WsRouter(r)
 	router.UserRouter(r, db)
 	router.TestRouter(r)
+	router.ProductRouter(r)
 
 	// 启动服务器，添加错误处理
 	log.Println("Server starting on port 8080...")

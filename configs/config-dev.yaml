@@ -1,0 +1,17 @@
+database:
+  driver: "mysql"
+  dsn: "ecommerce_user:123456@tcp(127.0.0.1:3306)/ecommerce?charset=utf8mb4&parseTime=True&loc=Local"
+  max_open_conns: 25
+  max_idle_conns: 10
+  conn_max_lifetime: 300
+  conn_max_idle_time: 60
+
+server:
+  port: 8080
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  pool_size: 10
+
